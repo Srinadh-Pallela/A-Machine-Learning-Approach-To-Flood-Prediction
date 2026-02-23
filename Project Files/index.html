@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rising Waters | Flood Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f0f2f5; }
+        .card { border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .header { background: #0d6efd; color: white; padding: 25px; border-radius: 15px 15px 0 0; }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 card p-0">
+                <div class="header text-center">
+                    <h2 class="fw-bold">Flood Risk Assessment System</h2>
+                    <p class="mb-0">Environmental Data Analysis</p>
+                </div>
+                
+                <form action="/predict" method="post" class="p-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Rainfall (mm)</label>
+                            <input type="number" step="any" name="rainfall" class="form-control" value="{{ inputs.rainfall }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Temp (C)</label>
+                            <input type="number" step="any" name="temp" class="form-control" value="{{ inputs.temp }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Humidity (%)</label>
+                            <input type="number" step="any" name="humidity" class="form-control" value="{{ inputs.humidity }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">River Discharge (m3/s)</label>
+                            <input type="number" step="any" name="discharge" class="form-control" value="{{ inputs.discharge }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Water Level (m)</label>
+                            <input type="number" step="any" name="water_level" class="form-control" value="{{ inputs.water_level }}" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Elevation (m)</label>
+                            <input type="number" step="any" name="elevation" class="form-control" value="{{ inputs.elevation }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Land Cover</label>
+                            <select name="land_cover" class="form-select">
+                                {% for opt in ['Urban', 'Forest', 'Desert', 'Agricultural'] %}
+                                <option value="{{ opt }}" {% if inputs.land_cover == opt %}selected{% endif %}>{{ opt }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Soil Type</label>
+                            <select name="soil_type" class="form-select">
+                                {% for opt in ['Sandy', 'Silt', 'Loam', 'Peat', 'Clay'] %}
+                                <option value="{{ opt }}" {% if inputs.soil_type == opt %}selected{% endif %}>{{ opt }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <label class="form-label">Historical Floods in Area?</label>
+                            <select name="history" class="form-select">
+                                <option value="1" {% if inputs.history == '1' %}selected{% endif %}>Yes, Frequent</option>
+                                <option value="0" {% if inputs.history == '0' %}selected{% endif %}>No, Rare</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mt-4 shadow">Generate Prediction</button>
+                </form>
+
+                {% if prediction_text %}
+                <div class="alert alert-{{status}} m-4 text-center shadow-sm">
+                    <h3 class="mb-0 fw-bold">{{ prediction_text }}</h3>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
